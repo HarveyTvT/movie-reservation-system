@@ -8,7 +8,16 @@ import (
 )
 
 type Config struct {
-	Secret string
+	Secret     string           `yaml:"secret"`
+	Cloudflare CloudflareConfig `yaml:"cloudflare"`
+}
+
+type CloudflareConfig struct {
+	AccountID       string `yaml:"account_id"`
+	AccessKeyID     string `yaml:"access_key_id"`
+	AccessKeySecret string `yaml:"access_key_secret"`
+	BucketName      string `yaml:"bucket_name"`
+	BucketDomain    string `yaml:"bucket_domain"`
 }
 
 var (
@@ -18,10 +27,16 @@ var (
 
 func Get() Config {
 	once.Do(func() {
-		filePath := "/var/local/movie-reservation/config.yaml"
+		filePath := "config.yaml"
+		// create an empty config yaml if file not exists
 		if _, err := os.Stat(filePath); os.IsNotExist(err) {
-			os.MkdirAll("/var/local/movie-reservation", os.ModePerm)
-			os.Create(filePath)
+			newFile, cErr := os.Create(filePath)
+			if cErr != nil {
+				panic(cErr)
+			}
+			defer newFile.Close()
+			_ = yaml.NewEncoder(newFile).Encode(&Config{})
+			panic("please setup config.yaml")
 		}
 
 		yamlFile, err := os.OpenFile(filePath, os.O_RDONLY, os.ModePerm)

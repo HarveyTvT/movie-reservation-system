@@ -35,6 +35,31 @@ func AuthAnnotator(ctx context.Context, r *http.Request) metadata.MD {
 	return nil
 }
 
+func Authed(r *http.Request) (context.Context, error) {
+	var (
+		auth string
+	)
+
+	if v := r.Header.Get("Authorization"); v != "" {
+		auth = v
+	} else if v := r.CookiesNamed("authorization"); len(v) > 0 {
+		auth = v[0].Value
+	} else {
+		return r.Context(), nil
+	}
+
+	if strings.HasPrefix(auth, "Bearer ") {
+		auth = strings.TrimPrefix(auth, "Bearer ")
+	}
+
+	jwt, err := Parse(auth)
+	if err == nil {
+		return context.WithValue(r.Context(), "username", jwt.Payload.Username), nil
+	}
+
+	return r.Context(), nil
+}
+
 func ForwardResponseOption(ctx context.Context, w http.ResponseWriter, response proto.Message) error {
 	md, ok := runtime.ServerMetadataFromContext(ctx)
 	if !ok {
@@ -53,6 +78,10 @@ func ForwardResponseOption(ctx context.Context, w http.ResponseWriter, response 
 func UsernameFromContext(ctx context.Context) string {
 	if v := metadata.ValueFromIncomingContext(ctx, "username"); len(v) > 0 {
 		return v[0]
+	}
+
+	if v, ok := ctx.Value("username").(string); ok {
+		return v
 	}
 
 	return ""

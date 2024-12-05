@@ -12,6 +12,7 @@ import (
 	"github.com/harveytvt/movie-reservation-system/internal/service"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -27,11 +28,13 @@ func listenGrpc() {
 		panic(err)
 	}
 
-	srv := grpc.NewServer()
-	movie_reservation.RegisterMovieReservationServiceServer(srv, service.NewService())
-	reflection.Register(srv)
+	server := grpc.NewServer()
+	service := service.NewService()
+	movie_reservation.RegisterMovieReservationServiceServer(server, service)
+	grpc_health_v1.RegisterHealthServer(server, service)
+	reflection.Register(server)
 
-	if err = srv.Serve(lis); err != nil {
+	if err = server.Serve(lis); err != nil {
 		panic(err)
 	}
 }
@@ -49,6 +52,9 @@ func listenHttp() {
 	)
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 	err := movie_reservation.RegisterMovieReservationServiceHandlerFromEndpoint(ctx, mux, *grpcServerEndpoint, opts)
+
+	// custom handler
+	service.HandleUpload(mux)
 
 	if err != nil {
 		panic(err)
