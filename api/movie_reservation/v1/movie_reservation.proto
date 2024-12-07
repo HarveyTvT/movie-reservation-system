@@ -1,10 +1,21 @@
 syntax = "proto3";
 package api.movie_reservation.v1;
-option go_package = "github.com/harveytvt/movie-reservation-system/gen/go/api/movie_reservation/v1;movie_reservation";
 
 import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "github.com/harveytvt/movie-reservation-system/gen/go/api/movie_reservation/v1;movie_reservation";
 
 service MovieReservationService {
+  rpc Register(RegisterRequest) returns (RegisterResponse) {
+    option (google.api.http) = {
+      post: "/v1/register"
+      body: "*"
+    };
+  }
+
   rpc Login(LoginRequest) returns (LoginResponse) {
     option (google.api.http) = {
       post: "/v1/login"
@@ -13,11 +24,115 @@ service MovieReservationService {
   }
 
   rpc Whoami(WhoamiRequest) returns (WhoamiResponse) {
+    option (google.api.http) = {get: "/v1/whoami"};
+  }
+
+  rpc CreateMovie(CreateMovieRequest) returns (CreateMovieResponse) {
     option (google.api.http) = {
-      get: "/v1/whoami"
+      post: "/v1/movies"
+      body: "*"
     };
   }
+
+  rpc UpdateMovie(UpdateMovieRequest) returns (UpdateMovieResponse) {
+    option (google.api.http) = {
+      put: "/v1/movies/{id}"
+      body: "*"
+    };
+  }
+
+  rpc ListMovies(ListMoviesRequest) returns (ListMoviesResponse) {
+    option (google.api.http) = {get: "/v1/movies"};
+  }
+
+  rpc ListShows(ListShowsRequest) returns (ListShowsResponse) {
+    option (google.api.http) = {get: "/v1/shows"};
+  }
+
+  rpc GetShowSeats(GetShowSeatsRequest) returns (GetShowSeatsResponse) {
+    option (google.api.http) = {get: "/v1/shows/{show_id}/seats"};
+  }
 }
+
+message User {
+  string username = 1;
+  Role role = 2;
+
+  enum Role {
+    ROLE_UNSPECIFIED = 0;
+    ROLE_USER = 1;
+    ROLE_ADMIN = 2;
+    ROLE_SUPER_ADMIN = 3;
+  }
+}
+
+message Movie {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  string duration = 4;
+  string poster = 5;
+  repeated string genre = 6;
+}
+
+message Theater {
+  string id = 1;
+  string name = 2;
+  string address = 3;
+}
+
+message Hall {
+  string id = 1;
+  uint64 theater_id = 2;
+  string name = 3;
+  uint32 capacity = 4;
+}
+
+message Show {
+  string id = 1;
+  Theater theater = 2;
+  Hall hall = 3;
+  Movie movie = 4;
+  google.protobuf.Timestamp started_at = 5;
+}
+
+message Seat {
+  string id = 1;
+  uint64 hall_id = 2;
+  uint32 row = 3;
+  uint32 col = 4;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_AVAILABLE = 1;
+    STATUS_RESERVED = 2;
+    STATUS_SOLD = 3;
+  }
+}
+
+message Order {
+  string id = 1;
+  Show show = 2;
+  Seat seat = 3;
+  User user = 4;
+  Status status = 5;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_PENDING = 1;
+    STATUS_CONFIRMED = 2;
+    STATUS_CANCELED = 3;
+    STATUS_CONSUMED = 4;
+    STATUS_EXPIRED = 5;
+  }
+}
+
+message RegisterRequest {
+  string username = 1 [(google.api.field_behavior) = REQUIRED];
+  string password = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message RegisterResponse {}
 
 message LoginRequest {
   string username = 1;
@@ -28,9 +143,62 @@ message LoginResponse {
   string token = 1;
 }
 
-message WhoamiRequest {
-}
+message WhoamiRequest {}
 
 message WhoamiResponse {
-  string username = 1;
+  User user = 1;
+}
+
+message CreateMovieRequest {
+  string title = 1 [(google.api.field_behavior) = REQUIRED];
+  string description = 2 [(google.api.field_behavior) = REQUIRED];
+  string duration = 3 [(google.api.field_behavior) = REQUIRED];
+  string poster = 4 [(google.api.field_behavior) = REQUIRED];
+  repeated string genre = 8 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message CreateMovieResponse {
+  string id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message UpdateMovieRequest {
+  string id = 1 [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.StringValue title = 2 [(google.api.field_behavior) = OPTIONAL];
+  google.protobuf.StringValue description = 3 [(google.api.field_behavior) = OPTIONAL];
+  string duration = 4 [(google.api.field_behavior) = OPTIONAL];
+  string poster = 5 [(google.api.field_behavior) = OPTIONAL];
+  repeated string genre = 6 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message UpdateMovieResponse {}
+
+message ListMoviesRequest {
+  uint64 offset = 1 [(google.api.field_behavior) = REQUIRED];
+  uint64 limit = 2 [(google.api.field_behavior) = REQUIRED];
+
+  string genre = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message ListMoviesResponse {
+  repeated Movie movies = 1 [(google.api.field_behavior) = REQUIRED];
+  uint64 total = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ListShowsRequest {
+  string movie_id = 1 [(google.api.field_behavior) = REQUIRED];
+  uint64 offset = 2 [(google.api.field_behavior) = REQUIRED];
+  uint64 limit = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ListShowsResponse {
+  repeated Show shows = 1 [(google.api.field_behavior) = REQUIRED];
+  uint64 total = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message GetShowSeatsRequest {
+  string show_id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message GetShowSeatsResponse {
+  repeated Seat seats = 1 [(google.api.field_behavior) = REQUIRED];
 }

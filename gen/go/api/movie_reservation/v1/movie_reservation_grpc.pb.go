@@ -19,16 +19,28 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	MovieReservationService_Login_FullMethodName  = "/api.movie_reservation.v1.MovieReservationService/Login"
-	MovieReservationService_Whoami_FullMethodName = "/api.movie_reservation.v1.MovieReservationService/Whoami"
+	MovieReservationService_Register_FullMethodName     = "/api.movie_reservation.v1.MovieReservationService/Register"
+	MovieReservationService_Login_FullMethodName        = "/api.movie_reservation.v1.MovieReservationService/Login"
+	MovieReservationService_Whoami_FullMethodName       = "/api.movie_reservation.v1.MovieReservationService/Whoami"
+	MovieReservationService_CreateMovie_FullMethodName  = "/api.movie_reservation.v1.MovieReservationService/CreateMovie"
+	MovieReservationService_UpdateMovie_FullMethodName  = "/api.movie_reservation.v1.MovieReservationService/UpdateMovie"
+	MovieReservationService_ListMovies_FullMethodName   = "/api.movie_reservation.v1.MovieReservationService/ListMovies"
+	MovieReservationService_ListShows_FullMethodName    = "/api.movie_reservation.v1.MovieReservationService/ListShows"
+	MovieReservationService_GetShowSeats_FullMethodName = "/api.movie_reservation.v1.MovieReservationService/GetShowSeats"
 )
 
 // MovieReservationServiceClient is the client API for MovieReservationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MovieReservationServiceClient interface {
+	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	Whoami(ctx context.Context, in *WhoamiRequest, opts ...grpc.CallOption) (*WhoamiResponse, error)
+	CreateMovie(ctx context.Context, in *CreateMovieRequest, opts ...grpc.CallOption) (*CreateMovieResponse, error)
+	UpdateMovie(ctx context.Context, in *UpdateMovieRequest, opts ...grpc.CallOption) (*UpdateMovieResponse, error)
+	ListMovies(ctx context.Context, in *ListMoviesRequest, opts ...grpc.CallOption) (*ListMoviesResponse, error)
+	ListShows(ctx context.Context, in *ListShowsRequest, opts ...grpc.CallOption) (*ListShowsResponse, error)
+	GetShowSeats(ctx context.Context, in *GetShowSeatsRequest, opts ...grpc.CallOption) (*GetShowSeatsResponse, error)
 }
 
 type movieReservationServiceClient struct {
@@ -37,6 +49,15 @@ type movieReservationServiceClient struct {
 
 func NewMovieReservationServiceClient(cc grpc.ClientConnInterface) MovieReservationServiceClient {
 	return &movieReservationServiceClient{cc}
+}
+
+func (c *movieReservationServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
+	out := new(RegisterResponse)
+	err := c.cc.Invoke(ctx, MovieReservationService_Register_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *movieReservationServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
@@ -57,12 +78,63 @@ func (c *movieReservationServiceClient) Whoami(ctx context.Context, in *WhoamiRe
 	return out, nil
 }
 
+func (c *movieReservationServiceClient) CreateMovie(ctx context.Context, in *CreateMovieRequest, opts ...grpc.CallOption) (*CreateMovieResponse, error) {
+	out := new(CreateMovieResponse)
+	err := c.cc.Invoke(ctx, MovieReservationService_CreateMovie_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *movieReservationServiceClient) UpdateMovie(ctx context.Context, in *UpdateMovieRequest, opts ...grpc.CallOption) (*UpdateMovieResponse, error) {
+	out := new(UpdateMovieResponse)
+	err := c.cc.Invoke(ctx, MovieReservationService_UpdateMovie_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *movieReservationServiceClient) ListMovies(ctx context.Context, in *ListMoviesRequest, opts ...grpc.CallOption) (*ListMoviesResponse, error) {
+	out := new(ListMoviesResponse)
+	err := c.cc.Invoke(ctx, MovieReservationService_ListMovies_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *movieReservationServiceClient) ListShows(ctx context.Context, in *ListShowsRequest, opts ...grpc.CallOption) (*ListShowsResponse, error) {
+	out := new(ListShowsResponse)
+	err := c.cc.Invoke(ctx, MovieReservationService_ListShows_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *movieReservationServiceClient) GetShowSeats(ctx context.Context, in *GetShowSeatsRequest, opts ...grpc.CallOption) (*GetShowSeatsResponse, error) {
+	out := new(GetShowSeatsResponse)
+	err := c.cc.Invoke(ctx, MovieReservationService_GetShowSeats_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MovieReservationServiceServer is the server API for MovieReservationService service.
 // All implementations must embed UnimplementedMovieReservationServiceServer
 // for forward compatibility
 type MovieReservationServiceServer interface {
+	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	Whoami(context.Context, *WhoamiRequest) (*WhoamiResponse, error)
+	CreateMovie(context.Context, *CreateMovieRequest) (*CreateMovieResponse, error)
+	UpdateMovie(context.Context, *UpdateMovieRequest) (*UpdateMovieResponse, error)
+	ListMovies(context.Context, *ListMoviesRequest) (*ListMoviesResponse, error)
+	ListShows(context.Context, *ListShowsRequest) (*ListShowsResponse, error)
+	GetShowSeats(context.Context, *GetShowSeatsRequest) (*GetShowSeatsResponse, error)
 	mustEmbedUnimplementedMovieReservationServiceServer()
 }
 
@@ -70,11 +142,29 @@ type MovieReservationServiceServer interface {
 type UnimplementedMovieReservationServiceServer struct {
 }
 
+func (UnimplementedMovieReservationServiceServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
+}
 func (UnimplementedMovieReservationServiceServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
 func (UnimplementedMovieReservationServiceServer) Whoami(context.Context, *WhoamiRequest) (*WhoamiResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Whoami not implemented")
+}
+func (UnimplementedMovieReservationServiceServer) CreateMovie(context.Context, *CreateMovieRequest) (*CreateMovieResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateMovie not implemented")
+}
+func (UnimplementedMovieReservationServiceServer) UpdateMovie(context.Context, *UpdateMovieRequest) (*UpdateMovieResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateMovie not implemented")
+}
+func (UnimplementedMovieReservationServiceServer) ListMovies(context.Context, *ListMoviesRequest) (*ListMoviesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListMovies not implemented")
+}
+func (UnimplementedMovieReservationServiceServer) ListShows(context.Context, *ListShowsRequest) (*ListShowsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListShows not implemented")
+}
+func (UnimplementedMovieReservationServiceServer) GetShowSeats(context.Context, *GetShowSeatsRequest) (*GetShowSeatsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetShowSeats not implemented")
 }
 func (UnimplementedMovieReservationServiceServer) mustEmbedUnimplementedMovieReservationServiceServer() {
 }
@@ -88,6 +178,24 @@ type UnsafeMovieReservationServiceServer interface {
 
 func RegisterMovieReservationServiceServer(s grpc.ServiceRegistrar, srv MovieReservationServiceServer) {
 	s.RegisterService(&MovieReservationService_ServiceDesc, srv)
+}
+
+func _MovieReservationService_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieReservationServiceServer).Register(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MovieReservationService_Register_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieReservationServiceServer).Register(ctx, req.(*RegisterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _MovieReservationService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -126,6 +234,96 @@ func _MovieReservationService_Whoami_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MovieReservationService_CreateMovie_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateMovieRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieReservationServiceServer).CreateMovie(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MovieReservationService_CreateMovie_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieReservationServiceServer).CreateMovie(ctx, req.(*CreateMovieRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MovieReservationService_UpdateMovie_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateMovieRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieReservationServiceServer).UpdateMovie(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MovieReservationService_UpdateMovie_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieReservationServiceServer).UpdateMovie(ctx, req.(*UpdateMovieRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MovieReservationService_ListMovies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMoviesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieReservationServiceServer).ListMovies(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MovieReservationService_ListMovies_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieReservationServiceServer).ListMovies(ctx, req.(*ListMoviesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MovieReservationService_ListShows_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListShowsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieReservationServiceServer).ListShows(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MovieReservationService_ListShows_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieReservationServiceServer).ListShows(ctx, req.(*ListShowsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MovieReservationService_GetShowSeats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetShowSeatsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieReservationServiceServer).GetShowSeats(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MovieReservationService_GetShowSeats_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieReservationServiceServer).GetShowSeats(ctx, req.(*GetShowSeatsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MovieReservationService_ServiceDesc is the grpc.ServiceDesc for MovieReservationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -134,12 +332,36 @@ var MovieReservationService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*MovieReservationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "Register",
+			Handler:    _MovieReservationService_Register_Handler,
+		},
+		{
 			MethodName: "Login",
 			Handler:    _MovieReservationService_Login_Handler,
 		},
 		{
 			MethodName: "Whoami",
 			Handler:    _MovieReservationService_Whoami_Handler,
+		},
+		{
+			MethodName: "CreateMovie",
+			Handler:    _MovieReservationService_CreateMovie_Handler,
+		},
+		{
+			MethodName: "UpdateMovie",
+			Handler:    _MovieReservationService_UpdateMovie_Handler,
+		},
+		{
+			MethodName: "ListMovies",
+			Handler:    _MovieReservationService_ListMovies_Handler,
+		},
+		{
+			MethodName: "ListShows",
+			Handler:    _MovieReservationService_ListShows_Handler,
+		},
+		{
+			MethodName: "GetShowSeats",
+			Handler:    _MovieReservationService_GetShowSeats_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

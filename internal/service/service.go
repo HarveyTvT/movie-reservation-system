@@ -52,8 +52,9 @@ func (s *service) Login(ctx context.Context, req *movie_reservation.LoginRequest
 }
 
 func (s *service) Whoami(ctx context.Context, req *movie_reservation.WhoamiRequest) (*movie_reservation.WhoamiResponse, error) {
-	username := auth.UsernameFromContext(ctx)
+	// username := auth.UsernameFromContext(ctx)
+
 	return &movie_reservation.WhoamiResponse{
-		Username: username,
+		User: nil,
 	}, nil
 }

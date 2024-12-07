@@ -2,6 +2,7 @@ version: v2
 name: buf.build/harveytvt/movie_reservation
 deps:
   - buf.build/googleapis/googleapis
+  - buf.build/protocolbuffers/wellknowntypes
 lint:
   use:
-    - STANDARD
+    - BASIC
