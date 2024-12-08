@@ -8,6 +8,7 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/harveytvt/movie-reservation-system/gen/go/api/movie_reservation/v1"
 	"github.com/harveytvt/movie-reservation-system/internal/config"
 )
 
@@ -28,7 +29,8 @@ func (header JwtHeader) String() string {
 }
 
 type JwtPayload struct {
-	Username string `json:"username"`
+	Username string                      `json:"username"`
+	Role     movie_reservation.User_Role `json:"role"`
 }
 
 func (payload JwtPayload) String() string {
@@ -57,15 +59,15 @@ func NewJwtHeader() JwtHeader {
 	}
 }
 
-func NewJwtPayload(username string) JwtPayload {
+func NewJwtPayload(username string, role movie_reservation.User_Role) JwtPayload {
 	return JwtPayload{
 		Username: username,
+		Role:     role,
 	}
 }
 
-func NewJwt(username string, secret string) Jwt {
+func NewJwt(payload JwtPayload, secret string) Jwt {
 	header := NewJwtHeader()
-	payload := NewJwtPayload(username)
 	sign := Sign(header, payload, secret)
 
 	return Jwt{

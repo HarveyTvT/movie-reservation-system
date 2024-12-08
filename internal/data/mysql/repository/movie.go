@@ -55,3 +55,8 @@ func (r *MovieRepository) MGet(ctx context.Context, ids []uint64) ([]*model.Movi
 	}
 	return results, nil
 }
+
+func (r *MovieRepository) Delete(ctx context.Context, movieID uint64) error {
+	_, err := r.db.NewDelete().Model(&model.Movie{ID: movieID}).WherePK().Exec(ctx)
+	return err
+}

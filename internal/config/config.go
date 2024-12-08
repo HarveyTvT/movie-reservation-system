@@ -9,7 +9,9 @@ import (
 
 type Config struct {
 	Secret     string           `yaml:"secret"`
+	Salt       string           `yaml:"salt"`
 	Cloudflare CloudflareConfig `yaml:"cloudflare"`
+	MysqlDSN   string           `yaml:"mysqldsn"`
 }
 
 type CloudflareConfig struct {

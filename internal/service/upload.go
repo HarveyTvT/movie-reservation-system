@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/google/uuid"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/harveytvt/movie-reservation-system/gen/go/api/movie_reservation/v1"
 	"github.com/harveytvt/movie-reservation-system/internal/auth"
 	"github.com/harveytvt/movie-reservation-system/internal/config"
 )
@@ -26,24 +27,37 @@ func HandleUpload(mux *runtime.ServeMux) {
 			return
 		}
 
-		newCtx, err := auth.Authed(r)
+		// auth
+		jwtPayload, err := auth.ParseJwtPayload(r)
 		if err != nil {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
-		r = r.WithContext(newCtx)
 
-		if auth.UsernameFromContext(r.Context()) == "" {
+		if jwtPayload.Username == "" {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
 
+		// upload dir control based on user role.
 		dir := pathParams["dir"]
-		if dir != "poster" && dir != "trailer" && dir != "avatar" {
-			http.Error(w, "Bad Request", http.StatusBadRequest)
+		switch jwtPayload.Role {
+		case movie_reservation.User_ROLE_USER:
+			if dir != "avatar" {
+				http.Error(w, "Forbidden", http.StatusForbidden)
+				return
+			}
+		case movie_reservation.User_ROLE_ADMIN, movie_reservation.User_ROLE_SUPER_ADMIN:
+			if dir != "poster" && dir != "trailer" {
+				http.Error(w, "Forbidden", http.StatusForbidden)
+				return
+			}
+		default:
+			http.Error(w, "Forbidden", http.StatusForbidden)
 			return
 		}
 
+		// multipart form file upload.
 		file, header, err := r.FormFile("file")
 		if err != nil {
 			http.Error(w, "Bad Request", http.StatusBadRequest)
@@ -59,7 +73,6 @@ func HandleUpload(mux *runtime.ServeMux) {
 		)
 
 		err = r2Client.Put(r.Context(), bucket, objectKey, file, func(i *s3.PutObjectInput) {
-			i.ContentDisposition = aws.String(fmt.Sprintf("attachment;filename=%s", header.Filename))
 			i.ContentType = aws.String(header.Header.Get("Content-Type"))
 			i.ContentLength = aws.Int64(header.Size)
 		})

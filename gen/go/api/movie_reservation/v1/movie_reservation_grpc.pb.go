@@ -19,14 +19,25 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	MovieReservationService_Register_FullMethodName     = "/api.movie_reservation.v1.MovieReservationService/Register"
-	MovieReservationService_Login_FullMethodName        = "/api.movie_reservation.v1.MovieReservationService/Login"
-	MovieReservationService_Whoami_FullMethodName       = "/api.movie_reservation.v1.MovieReservationService/Whoami"
-	MovieReservationService_CreateMovie_FullMethodName  = "/api.movie_reservation.v1.MovieReservationService/CreateMovie"
-	MovieReservationService_UpdateMovie_FullMethodName  = "/api.movie_reservation.v1.MovieReservationService/UpdateMovie"
-	MovieReservationService_ListMovies_FullMethodName   = "/api.movie_reservation.v1.MovieReservationService/ListMovies"
-	MovieReservationService_ListShows_FullMethodName    = "/api.movie_reservation.v1.MovieReservationService/ListShows"
-	MovieReservationService_GetShowSeats_FullMethodName = "/api.movie_reservation.v1.MovieReservationService/GetShowSeats"
+	MovieReservationService_Register_FullMethodName         = "/api.movie_reservation.v1.MovieReservationService/Register"
+	MovieReservationService_Login_FullMethodName            = "/api.movie_reservation.v1.MovieReservationService/Login"
+	MovieReservationService_Whoami_FullMethodName           = "/api.movie_reservation.v1.MovieReservationService/Whoami"
+	MovieReservationService_CreateMovie_FullMethodName      = "/api.movie_reservation.v1.MovieReservationService/CreateMovie"
+	MovieReservationService_UpdateMovie_FullMethodName      = "/api.movie_reservation.v1.MovieReservationService/UpdateMovie"
+	MovieReservationService_ListMovies_FullMethodName       = "/api.movie_reservation.v1.MovieReservationService/ListMovies"
+	MovieReservationService_AddMovieGenre_FullMethodName    = "/api.movie_reservation.v1.MovieReservationService/AddMovieGenre"
+	MovieReservationService_RemoveMovieGenre_FullMethodName = "/api.movie_reservation.v1.MovieReservationService/RemoveMovieGenre"
+	MovieReservationService_ListShows_FullMethodName        = "/api.movie_reservation.v1.MovieReservationService/ListShows"
+	MovieReservationService_GetShowSeats_FullMethodName     = "/api.movie_reservation.v1.MovieReservationService/GetShowSeats"
+	MovieReservationService_CreateTheater_FullMethodName    = "/api.movie_reservation.v1.MovieReservationService/CreateTheater"
+	MovieReservationService_UpdateTheater_FullMethodName    = "/api.movie_reservation.v1.MovieReservationService/UpdateTheater"
+	MovieReservationService_DeleteTheater_FullMethodName    = "/api.movie_reservation.v1.MovieReservationService/DeleteTheater"
+	MovieReservationService_CreateHall_FullMethodName       = "/api.movie_reservation.v1.MovieReservationService/CreateHall"
+	MovieReservationService_UpdateHall_FullMethodName       = "/api.movie_reservation.v1.MovieReservationService/UpdateHall"
+	MovieReservationService_DeleteHall_FullMethodName       = "/api.movie_reservation.v1.MovieReservationService/DeleteHall"
+	MovieReservationService_CreateSeat_FullMethodName       = "/api.movie_reservation.v1.MovieReservationService/CreateSeat"
+	MovieReservationService_DeleteSeat_FullMethodName       = "/api.movie_reservation.v1.MovieReservationService/DeleteSeat"
+	MovieReservationService_GetHallSeats_FullMethodName     = "/api.movie_reservation.v1.MovieReservationService/GetHallSeats"
 )
 
 // MovieReservationServiceClient is the client API for MovieReservationService service.
@@ -39,8 +50,19 @@ type MovieReservationServiceClient interface {
 	CreateMovie(ctx context.Context, in *CreateMovieRequest, opts ...grpc.CallOption) (*CreateMovieResponse, error)
 	UpdateMovie(ctx context.Context, in *UpdateMovieRequest, opts ...grpc.CallOption) (*UpdateMovieResponse, error)
 	ListMovies(ctx context.Context, in *ListMoviesRequest, opts ...grpc.CallOption) (*ListMoviesResponse, error)
+	AddMovieGenre(ctx context.Context, in *AddMovieGenreRequest, opts ...grpc.CallOption) (*AddMovieGenreResponse, error)
+	RemoveMovieGenre(ctx context.Context, in *RemoveMovieGenreRequest, opts ...grpc.CallOption) (*RemoveMovieGenreResponse, error)
 	ListShows(ctx context.Context, in *ListShowsRequest, opts ...grpc.CallOption) (*ListShowsResponse, error)
 	GetShowSeats(ctx context.Context, in *GetShowSeatsRequest, opts ...grpc.CallOption) (*GetShowSeatsResponse, error)
+	CreateTheater(ctx context.Context, in *CreateTheaterRequest, opts ...grpc.CallOption) (*CreateTheaterResponse, error)
+	UpdateTheater(ctx context.Context, in *UpdateTheaterRequest, opts ...grpc.CallOption) (*UpdateTheaterResponse, error)
+	DeleteTheater(ctx context.Context, in *DeleteTheaterRequest, opts ...grpc.CallOption) (*DeleteTheaterResponse, error)
+	CreateHall(ctx context.Context, in *CreateHallRequest, opts ...grpc.CallOption) (*CreateHallResponse, error)
+	UpdateHall(ctx context.Context, in *UpdateHallRequest, opts ...grpc.CallOption) (*UpdateHallResponse, error)
+	DeleteHall(ctx context.Context, in *DeleteHallRequest, opts ...grpc.CallOption) (*DeleteHallResponse, error)
+	CreateSeat(ctx context.Context, in *CreateSeatRequest, opts ...grpc.CallOption) (*CreateSeatResponse, error)
+	DeleteSeat(ctx context.Context, in *DeleteSeatRequest, opts ...grpc.CallOption) (*DeleteSeatResponse, error)
+	GetHallSeats(ctx context.Context, in *GetHallSeatsRequest, opts ...grpc.CallOption) (*GetHallSeatsResponse, error)
 }
 
 type movieReservationServiceClient struct {
@@ -105,6 +127,24 @@ func (c *movieReservationServiceClient) ListMovies(ctx context.Context, in *List
 	return out, nil
 }
 
+func (c *movieReservationServiceClient) AddMovieGenre(ctx context.Context, in *AddMovieGenreRequest, opts ...grpc.CallOption) (*AddMovieGenreResponse, error) {
+	out := new(AddMovieGenreResponse)
+	err := c.cc.Invoke(ctx, MovieReservationService_AddMovieGenre_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *movieReservationServiceClient) RemoveMovieGenre(ctx context.Context, in *RemoveMovieGenreRequest, opts ...grpc.CallOption) (*RemoveMovieGenreResponse, error) {
+	out := new(RemoveMovieGenreResponse)
+	err := c.cc.Invoke(ctx, MovieReservationService_RemoveMovieGenre_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *movieReservationServiceClient) ListShows(ctx context.Context, in *ListShowsRequest, opts ...grpc.CallOption) (*ListShowsResponse, error) {
 	out := new(ListShowsResponse)
 	err := c.cc.Invoke(ctx, MovieReservationService_ListShows_FullMethodName, in, out, opts...)
@@ -123,6 +163,87 @@ func (c *movieReservationServiceClient) GetShowSeats(ctx context.Context, in *Ge
 	return out, nil
 }
 
+func (c *movieReservationServiceClient) CreateTheater(ctx context.Context, in *CreateTheaterRequest, opts ...grpc.CallOption) (*CreateTheaterResponse, error) {
+	out := new(CreateTheaterResponse)
+	err := c.cc.Invoke(ctx, MovieReservationService_CreateTheater_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *movieReservationServiceClient) UpdateTheater(ctx context.Context, in *UpdateTheaterRequest, opts ...grpc.CallOption) (*UpdateTheaterResponse, error) {
+	out := new(UpdateTheaterResponse)
+	err := c.cc.Invoke(ctx, MovieReservationService_UpdateTheater_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *movieReservationServiceClient) DeleteTheater(ctx context.Context, in *DeleteTheaterRequest, opts ...grpc.CallOption) (*DeleteTheaterResponse, error) {
+	out := new(DeleteTheaterResponse)
+	err := c.cc.Invoke(ctx, MovieReservationService_DeleteTheater_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *movieReservationServiceClient) CreateHall(ctx context.Context, in *CreateHallRequest, opts ...grpc.CallOption) (*CreateHallResponse, error) {
+	out := new(CreateHallResponse)
+	err := c.cc.Invoke(ctx, MovieReservationService_CreateHall_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *movieReservationServiceClient) UpdateHall(ctx context.Context, in *UpdateHallRequest, opts ...grpc.CallOption) (*UpdateHallResponse, error) {
+	out := new(UpdateHallResponse)
+	err := c.cc.Invoke(ctx, MovieReservationService_UpdateHall_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *movieReservationServiceClient) DeleteHall(ctx context.Context, in *DeleteHallRequest, opts ...grpc.CallOption) (*DeleteHallResponse, error) {
+	out := new(DeleteHallResponse)
+	err := c.cc.Invoke(ctx, MovieReservationService_DeleteHall_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *movieReservationServiceClient) CreateSeat(ctx context.Context, in *CreateSeatRequest, opts ...grpc.CallOption) (*CreateSeatResponse, error) {
+	out := new(CreateSeatResponse)
+	err := c.cc.Invoke(ctx, MovieReservationService_CreateSeat_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *movieReservationServiceClient) DeleteSeat(ctx context.Context, in *DeleteSeatRequest, opts ...grpc.CallOption) (*DeleteSeatResponse, error) {
+	out := new(DeleteSeatResponse)
+	err := c.cc.Invoke(ctx, MovieReservationService_DeleteSeat_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *movieReservationServiceClient) GetHallSeats(ctx context.Context, in *GetHallSeatsRequest, opts ...grpc.CallOption) (*GetHallSeatsResponse, error) {
+	out := new(GetHallSeatsResponse)
+	err := c.cc.Invoke(ctx, MovieReservationService_GetHallSeats_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MovieReservationServiceServer is the server API for MovieReservationService service.
 // All implementations must embed UnimplementedMovieReservationServiceServer
 // for forward compatibility
@@ -133,8 +254,19 @@ type MovieReservationServiceServer interface {
 	CreateMovie(context.Context, *CreateMovieRequest) (*CreateMovieResponse, error)
 	UpdateMovie(context.Context, *UpdateMovieRequest) (*UpdateMovieResponse, error)
 	ListMovies(context.Context, *ListMoviesRequest) (*ListMoviesResponse, error)
+	AddMovieGenre(context.Context, *AddMovieGenreRequest) (*AddMovieGenreResponse, error)
+	RemoveMovieGenre(context.Context, *RemoveMovieGenreRequest) (*RemoveMovieGenreResponse, error)
 	ListShows(context.Context, *ListShowsRequest) (*ListShowsResponse, error)
 	GetShowSeats(context.Context, *GetShowSeatsRequest) (*GetShowSeatsResponse, error)
+	CreateTheater(context.Context, *CreateTheaterRequest) (*CreateTheaterResponse, error)
+	UpdateTheater(context.Context, *UpdateTheaterRequest) (*UpdateTheaterResponse, error)
+	DeleteTheater(context.Context, *DeleteTheaterRequest) (*DeleteTheaterResponse, error)
+	CreateHall(context.Context, *CreateHallRequest) (*CreateHallResponse, error)
+	UpdateHall(context.Context, *UpdateHallRequest) (*UpdateHallResponse, error)
+	DeleteHall(context.Context, *DeleteHallRequest) (*DeleteHallResponse, error)
+	CreateSeat(context.Context, *CreateSeatRequest) (*CreateSeatResponse, error)
+	DeleteSeat(context.Context, *DeleteSeatRequest) (*DeleteSeatResponse, error)
+	GetHallSeats(context.Context, *GetHallSeatsRequest) (*GetHallSeatsResponse, error)
 	mustEmbedUnimplementedMovieReservationServiceServer()
 }
 
@@ -160,11 +292,44 @@ func (UnimplementedMovieReservationServiceServer) UpdateMovie(context.Context, *
 func (UnimplementedMovieReservationServiceServer) ListMovies(context.Context, *ListMoviesRequest) (*ListMoviesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMovies not implemented")
 }
+func (UnimplementedMovieReservationServiceServer) AddMovieGenre(context.Context, *AddMovieGenreRequest) (*AddMovieGenreResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddMovieGenre not implemented")
+}
+func (UnimplementedMovieReservationServiceServer) RemoveMovieGenre(context.Context, *RemoveMovieGenreRequest) (*RemoveMovieGenreResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveMovieGenre not implemented")
+}
 func (UnimplementedMovieReservationServiceServer) ListShows(context.Context, *ListShowsRequest) (*ListShowsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListShows not implemented")
 }
 func (UnimplementedMovieReservationServiceServer) GetShowSeats(context.Context, *GetShowSeatsRequest) (*GetShowSeatsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetShowSeats not implemented")
+}
+func (UnimplementedMovieReservationServiceServer) CreateTheater(context.Context, *CreateTheaterRequest) (*CreateTheaterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateTheater not implemented")
+}
+func (UnimplementedMovieReservationServiceServer) UpdateTheater(context.Context, *UpdateTheaterRequest) (*UpdateTheaterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateTheater not implemented")
+}
+func (UnimplementedMovieReservationServiceServer) DeleteTheater(context.Context, *DeleteTheaterRequest) (*DeleteTheaterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteTheater not implemented")
+}
+func (UnimplementedMovieReservationServiceServer) CreateHall(context.Context, *CreateHallRequest) (*CreateHallResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateHall not implemented")
+}
+func (UnimplementedMovieReservationServiceServer) UpdateHall(context.Context, *UpdateHallRequest) (*UpdateHallResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateHall not implemented")
+}
+func (UnimplementedMovieReservationServiceServer) DeleteHall(context.Context, *DeleteHallRequest) (*DeleteHallResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteHall not implemented")
+}
+func (UnimplementedMovieReservationServiceServer) CreateSeat(context.Context, *CreateSeatRequest) (*CreateSeatResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateSeat not implemented")
+}
+func (UnimplementedMovieReservationServiceServer) DeleteSeat(context.Context, *DeleteSeatRequest) (*DeleteSeatResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteSeat not implemented")
+}
+func (UnimplementedMovieReservationServiceServer) GetHallSeats(context.Context, *GetHallSeatsRequest) (*GetHallSeatsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetHallSeats not implemented")
 }
 func (UnimplementedMovieReservationServiceServer) mustEmbedUnimplementedMovieReservationServiceServer() {
 }
@@ -288,6 +453,42 @@ func _MovieReservationService_ListMovies_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MovieReservationService_AddMovieGenre_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddMovieGenreRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieReservationServiceServer).AddMovieGenre(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MovieReservationService_AddMovieGenre_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieReservationServiceServer).AddMovieGenre(ctx, req.(*AddMovieGenreRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MovieReservationService_RemoveMovieGenre_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveMovieGenreRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieReservationServiceServer).RemoveMovieGenre(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MovieReservationService_RemoveMovieGenre_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieReservationServiceServer).RemoveMovieGenre(ctx, req.(*RemoveMovieGenreRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _MovieReservationService_ListShows_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListShowsRequest)
 	if err := dec(in); err != nil {
@@ -324,6 +525,168 @@ func _MovieReservationService_GetShowSeats_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MovieReservationService_CreateTheater_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateTheaterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieReservationServiceServer).CreateTheater(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MovieReservationService_CreateTheater_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieReservationServiceServer).CreateTheater(ctx, req.(*CreateTheaterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MovieReservationService_UpdateTheater_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateTheaterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieReservationServiceServer).UpdateTheater(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MovieReservationService_UpdateTheater_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieReservationServiceServer).UpdateTheater(ctx, req.(*UpdateTheaterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MovieReservationService_DeleteTheater_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteTheaterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieReservationServiceServer).DeleteTheater(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MovieReservationService_DeleteTheater_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieReservationServiceServer).DeleteTheater(ctx, req.(*DeleteTheaterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MovieReservationService_CreateHall_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateHallRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieReservationServiceServer).CreateHall(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MovieReservationService_CreateHall_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieReservationServiceServer).CreateHall(ctx, req.(*CreateHallRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MovieReservationService_UpdateHall_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateHallRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieReservationServiceServer).UpdateHall(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MovieReservationService_UpdateHall_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieReservationServiceServer).UpdateHall(ctx, req.(*UpdateHallRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MovieReservationService_DeleteHall_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteHallRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieReservationServiceServer).DeleteHall(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MovieReservationService_DeleteHall_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieReservationServiceServer).DeleteHall(ctx, req.(*DeleteHallRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MovieReservationService_CreateSeat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSeatRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieReservationServiceServer).CreateSeat(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MovieReservationService_CreateSeat_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieReservationServiceServer).CreateSeat(ctx, req.(*CreateSeatRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MovieReservationService_DeleteSeat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteSeatRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieReservationServiceServer).DeleteSeat(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MovieReservationService_DeleteSeat_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieReservationServiceServer).DeleteSeat(ctx, req.(*DeleteSeatRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MovieReservationService_GetHallSeats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetHallSeatsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieReservationServiceServer).GetHallSeats(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MovieReservationService_GetHallSeats_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieReservationServiceServer).GetHallSeats(ctx, req.(*GetHallSeatsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MovieReservationService_ServiceDesc is the grpc.ServiceDesc for MovieReservationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -356,12 +719,56 @@ var MovieReservationService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _MovieReservationService_ListMovies_Handler,
 		},
 		{
+			MethodName: "AddMovieGenre",
+			Handler:    _MovieReservationService_AddMovieGenre_Handler,
+		},
+		{
+			MethodName: "RemoveMovieGenre",
+			Handler:    _MovieReservationService_RemoveMovieGenre_Handler,
+		},
+		{
 			MethodName: "ListShows",
 			Handler:    _MovieReservationService_ListShows_Handler,
 		},
 		{
 			MethodName: "GetShowSeats",
 			Handler:    _MovieReservationService_GetShowSeats_Handler,
+		},
+		{
+			MethodName: "CreateTheater",
+			Handler:    _MovieReservationService_CreateTheater_Handler,
+		},
+		{
+			MethodName: "UpdateTheater",
+			Handler:    _MovieReservationService_UpdateTheater_Handler,
+		},
+		{
+			MethodName: "DeleteTheater",
+			Handler:    _MovieReservationService_DeleteTheater_Handler,
+		},
+		{
+			MethodName: "CreateHall",
+			Handler:    _MovieReservationService_CreateHall_Handler,
+		},
+		{
+			MethodName: "UpdateHall",
+			Handler:    _MovieReservationService_UpdateHall_Handler,
+		},
+		{
+			MethodName: "DeleteHall",
+			Handler:    _MovieReservationService_DeleteHall_Handler,
+		},
+		{
+			MethodName: "CreateSeat",
+			Handler:    _MovieReservationService_CreateSeat_Handler,
+		},
+		{
+			MethodName: "DeleteSeat",
+			Handler:    _MovieReservationService_DeleteSeat_Handler,
+		},
+		{
+			MethodName: "GetHallSeats",
+			Handler:    _MovieReservationService_GetHallSeats_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

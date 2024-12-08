@@ -15,22 +15,27 @@ func NewUserRepository(db *bun.DB) *UserRepository {
 	return &UserRepository{db}
 }
 
+func (r *UserRepository) Exists(ctx context.Context, username string) (bool, error) {
+	user := model.User{}
+	return r.db.NewSelect().Model(&user).Where("username = ?", username).Exists(ctx)
+}
+
 func (r *UserRepository) Find(ctx context.Context, unsername string) (*model.User, error) {
-	user := new(model.User)
-	err := r.db.NewSelect().Model(user).Where("username = ?", unsername).Scan(ctx, &user)
+	user := model.User{}
+	err := r.db.NewSelect().Model(&user).Where("username = ?", unsername).Scan(ctx, &user)
 	if err != nil {
 		return nil, err
 	}
-	return user, nil
+	return &user, nil
 }
 
 func (r *UserRepository) Get(ctx context.Context, id uint64) (*model.User, error) {
-	user := new(model.User)
-	err := r.db.NewSelect().Model(user).Where("id = ?", id).Scan(ctx, &user)
+	user := model.User{}
+	err := r.db.NewSelect().Model(&user).Where("id = ?", id).Scan(ctx, &user)
 	if err != nil {
 		return nil, err
 	}
-	return user, nil
+	return &user, nil
 }
 
 func (r *UserRepository) Create(ctx context.Context, user *model.User) error {

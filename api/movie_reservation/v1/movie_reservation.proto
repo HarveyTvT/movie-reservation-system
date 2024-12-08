@@ -45,12 +45,71 @@ service MovieReservationService {
     option (google.api.http) = {get: "/v1/movies"};
   }
 
+  rpc AddMovieGenre(AddMovieGenreRequest) returns (AddMovieGenreResponse) {
+    option (google.api.http) = {put: "/v1/movies/{id}/genre/{genre}"};
+  }
+
+  rpc RemoveMovieGenre(RemoveMovieGenreRequest) returns (RemoveMovieGenreResponse) {
+    option (google.api.http) = {delete: "/v1/movies/{id}/genre/{genre}"};
+  }
+
   rpc ListShows(ListShowsRequest) returns (ListShowsResponse) {
     option (google.api.http) = {get: "/v1/shows"};
   }
 
   rpc GetShowSeats(GetShowSeatsRequest) returns (GetShowSeatsResponse) {
     option (google.api.http) = {get: "/v1/shows/{show_id}/seats"};
+  }
+
+  rpc CreateTheater(CreateTheaterRequest) returns (CreateTheaterResponse) {
+    option (google.api.http) = {
+      post: "/v1/theaters"
+      body: "*"
+    };
+  }
+
+  rpc UpdateTheater(UpdateTheaterRequest) returns (UpdateTheaterResponse) {
+    option (google.api.http) = {
+      put: "/v1/theaters/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DeleteTheater(DeleteTheaterRequest) returns (DeleteTheaterResponse) {
+    option (google.api.http) = {delete: "/v1/theaters/{id}"};
+  }
+
+  rpc CreateHall(CreateHallRequest) returns (CreateHallResponse) {
+    option (google.api.http) = {
+      post: "/v1/halls"
+      body: "*"
+    };
+  }
+
+  rpc UpdateHall(UpdateHallRequest) returns (UpdateHallResponse) {
+    option (google.api.http) = {
+      put: "/v1/halls/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DeleteHall(DeleteHallRequest) returns (DeleteHallResponse) {
+    option (google.api.http) = {delete: "/v1/halls/{id}"};
+  }
+
+  rpc CreateSeat(CreateSeatRequest) returns (CreateSeatResponse) {
+    option (google.api.http) = {
+      post: "/v1/seats"
+      body: "*"
+    };
+  }
+
+  rpc DeleteSeat(DeleteSeatRequest) returns (DeleteSeatResponse) {
+    option (google.api.http) = {delete: "/v1/seats/{id}"};
+  }
+
+  rpc GetHallSeats(GetHallSeatsRequest) returns (GetHallSeatsResponse) {
+    option (google.api.http) = {get: "/v1/halls/{hall_id}/seats"};
   }
 }
 
@@ -70,7 +129,7 @@ message Movie {
   string id = 1;
   string title = 2;
   string description = 3;
-  string duration = 4;
+  uint64 duration = 4;
   string poster = 5;
   repeated string genre = 6;
 }
@@ -152,7 +211,7 @@ message WhoamiResponse {
 message CreateMovieRequest {
   string title = 1 [(google.api.field_behavior) = REQUIRED];
   string description = 2 [(google.api.field_behavior) = REQUIRED];
-  string duration = 3 [(google.api.field_behavior) = REQUIRED];
+  uint64 duration = 3 [(google.api.field_behavior) = REQUIRED];
   string poster = 4 [(google.api.field_behavior) = REQUIRED];
   repeated string genre = 8 [(google.api.field_behavior) = OPTIONAL];
 }
@@ -165,12 +224,25 @@ message UpdateMovieRequest {
   string id = 1 [(google.api.field_behavior) = REQUIRED];
   google.protobuf.StringValue title = 2 [(google.api.field_behavior) = OPTIONAL];
   google.protobuf.StringValue description = 3 [(google.api.field_behavior) = OPTIONAL];
-  string duration = 4 [(google.api.field_behavior) = OPTIONAL];
-  string poster = 5 [(google.api.field_behavior) = OPTIONAL];
-  repeated string genre = 6 [(google.api.field_behavior) = OPTIONAL];
+  google.protobuf.UInt64Value duration = 4 [(google.api.field_behavior) = OPTIONAL];
+  google.protobuf.StringValue poster = 5 [(google.api.field_behavior) = OPTIONAL];
 }
 
 message UpdateMovieResponse {}
+
+message AddMovieGenreRequest {
+  string id = 1 [(google.api.field_behavior) = REQUIRED];
+  string genre = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message AddMovieGenreResponse {}
+
+message RemoveMovieGenreRequest {
+  string id = 1 [(google.api.field_behavior) = REQUIRED];
+  string genre = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message RemoveMovieGenreResponse {}
 
 message ListMoviesRequest {
   uint64 offset = 1 [(google.api.field_behavior) = REQUIRED];
@@ -201,4 +273,100 @@ message GetShowSeatsRequest {
 
 message GetShowSeatsResponse {
   repeated Seat seats = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message CreateTheaterRequest {
+  string name = 1 [(google.api.field_behavior) = REQUIRED];
+  string description = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message CreateTheaterResponse {
+  string id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message UpdateTheaterRequest {
+  string id = 1 [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.StringValue name = 2 [(google.api.field_behavior) = OPTIONAL];
+  google.protobuf.StringValue description = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message UpdateTheaterResponse {}
+
+message DeleteTheaterRequest {
+  string id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message DeleteTheaterResponse {}
+
+message CreateHallRequest {
+  string theater_id = 1 [(google.api.field_behavior) = REQUIRED];
+  string name = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message CreateHallResponse {}
+
+message UpdateHallRequest {
+  string id = 1 [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.StringValue name = 2 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message UpdateHallResponse {}
+
+message DeleteHallRequest {
+  string id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message DeleteHallResponse {}
+
+message CreateSeatRequest {
+  string hall_id = 1 [(google.api.field_behavior) = REQUIRED];
+  uint32 row = 2 [(google.api.field_behavior) = REQUIRED];
+  uint32 col = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+message CreateSeatResponse {}
+
+message DeleteSeatRequest {
+  string id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message DeleteSeatResponse {}
+
+message GetHallSeatsRequest {
+  string hall_id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message GetHallSeatsResponse {
+  repeated Seat seats = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message CreateOrderRequest {
+  uint64 show_id = 1 [(google.api.field_behavior) = REQUIRED];
+  uint64 seat_id = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message CreateOrderResponse {
+  string id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message CancelOrderRequest {
+  string id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message CancelOrderResponse {}
+
+message ConfirmOrderRequest {
+  string id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ConfirmOrderResponse {}
+
+message ListOrdersRequest {
+  uint64 offset = 1 [(google.api.field_behavior) = REQUIRED];
+  uint64 limit = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ListOrdersResponse {
+  repeated Order orders = 1 [(google.api.field_behavior) = REQUIRED];
+  uint64 total = 2 [(google.api.field_behavior) = REQUIRED];
 }

@@ -16,6 +16,139 @@
     "application/json"
   ],
   "paths": {
+    "/v1/halls": {
+      "post": {
+        "operationId": "MovieReservationService_CreateHall",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateHallResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateHallRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MovieReservationService"
+        ]
+      }
+    },
+    "/v1/halls/{hallId}/seats": {
+      "get": {
+        "operationId": "MovieReservationService_GetHallSeats",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetHallSeatsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "hallId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MovieReservationService"
+        ]
+      }
+    },
+    "/v1/halls/{id}": {
+      "delete": {
+        "operationId": "MovieReservationService_DeleteHall",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeleteHallResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MovieReservationService"
+        ]
+      },
+      "put": {
+        "operationId": "MovieReservationService_UpdateHall",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateHallResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "tags": [
+          "MovieReservationService"
+        ]
+      }
+    },
     "/v1/login": {
       "post": {
         "operationId": "MovieReservationService_Login",
@@ -160,19 +293,84 @@
                   "type": "string"
                 },
                 "duration": {
-                  "type": "string"
+                  "type": "string",
+                  "format": "uint64"
                 },
                 "poster": {
                   "type": "string"
-                },
-                "genre": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
                 }
               }
             }
+          }
+        ],
+        "tags": [
+          "MovieReservationService"
+        ]
+      }
+    },
+    "/v1/movies/{id}/genre/{genre}": {
+      "delete": {
+        "operationId": "MovieReservationService_RemoveMovieGenre",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1RemoveMovieGenreResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "genre",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MovieReservationService"
+        ]
+      },
+      "put": {
+        "operationId": "MovieReservationService_AddMovieGenre",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AddMovieGenreResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "genre",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
         ],
         "tags": [
@@ -205,6 +403,68 @@
             "schema": {
               "$ref": "#/definitions/v1RegisterRequest"
             }
+          }
+        ],
+        "tags": [
+          "MovieReservationService"
+        ]
+      }
+    },
+    "/v1/seats": {
+      "post": {
+        "operationId": "MovieReservationService_CreateSeat",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateSeatResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateSeatRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MovieReservationService"
+        ]
+      }
+    },
+    "/v1/seats/{id}": {
+      "delete": {
+        "operationId": "MovieReservationService_DeleteSeat",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeleteSeatResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
         ],
         "tags": [
@@ -286,6 +546,112 @@
         ]
       }
     },
+    "/v1/theaters": {
+      "post": {
+        "operationId": "MovieReservationService_CreateTheater",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateTheaterResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateTheaterRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MovieReservationService"
+        ]
+      }
+    },
+    "/v1/theaters/{id}": {
+      "delete": {
+        "operationId": "MovieReservationService_DeleteTheater",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeleteTheaterResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MovieReservationService"
+        ]
+      },
+      "put": {
+        "operationId": "MovieReservationService_UpdateTheater",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateTheaterResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "tags": [
+          "MovieReservationService"
+        ]
+      }
+    },
     "/v1/whoami": {
       "get": {
         "operationId": "MovieReservationService_Whoami",
@@ -348,6 +714,27 @@
       },
       "additionalProperties": {}
     },
+    "v1AddMovieGenreResponse": {
+      "type": "object"
+    },
+    "v1CreateHallRequest": {
+      "type": "object",
+      "properties": {
+        "theaterId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "theaterId",
+        "name"
+      ]
+    },
+    "v1CreateHallResponse": {
+      "type": "object"
+    },
     "v1CreateMovieRequest": {
       "type": "object",
       "properties": {
@@ -358,7 +745,8 @@
           "type": "string"
         },
         "duration": {
-          "type": "string"
+          "type": "string",
+          "format": "uint64"
         },
         "poster": {
           "type": "string"
@@ -386,6 +774,80 @@
       },
       "required": [
         "id"
+      ]
+    },
+    "v1CreateSeatRequest": {
+      "type": "object",
+      "properties": {
+        "hallId": {
+          "type": "string"
+        },
+        "row": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "col": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "required": [
+        "hallId",
+        "row",
+        "col"
+      ]
+    },
+    "v1CreateSeatResponse": {
+      "type": "object"
+    },
+    "v1CreateTheaterRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "description"
+      ]
+    },
+    "v1CreateTheaterResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "v1DeleteHallResponse": {
+      "type": "object"
+    },
+    "v1DeleteSeatResponse": {
+      "type": "object"
+    },
+    "v1DeleteTheaterResponse": {
+      "type": "object"
+    },
+    "v1GetHallSeatsResponse": {
+      "type": "object",
+      "properties": {
+        "seats": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Seat"
+          }
+        }
+      },
+      "required": [
+        "seats"
       ]
     },
     "v1GetShowSeatsResponse": {
@@ -494,7 +956,8 @@
           "type": "string"
         },
         "duration": {
-          "type": "string"
+          "type": "string",
+          "format": "uint64"
         },
         "poster": {
           "type": "string"
@@ -523,6 +986,9 @@
       ]
     },
     "v1RegisterResponse": {
+      "type": "object"
+    },
+    "v1RemoveMovieGenreResponse": {
       "type": "object"
     },
     "v1Seat": {
@@ -580,7 +1046,13 @@
         }
       }
     },
+    "v1UpdateHallResponse": {
+      "type": "object"
+    },
     "v1UpdateMovieResponse": {
+      "type": "object"
+    },
+    "v1UpdateTheaterResponse": {
       "type": "object"
     },
     "v1User": {
