@@ -41,8 +41,23 @@ service MovieReservationService {
     };
   }
 
+  rpc DeleteMovie(DeleteMovieRequest) returns (DeleteMovieResponse) {
+    option (google.api.http) = {delete: "/v1/movies/{id}"};
+  }
+
   rpc ListMovies(ListMoviesRequest) returns (ListMoviesResponse) {
     option (google.api.http) = {get: "/v1/movies"};
+  }
+
+  rpc CreateGenre(CreateGenreRequest) returns (CreateGenreResponse) {
+    option (google.api.http) = {
+      post: "/v1/genres"
+      body: "*"
+    };
+  }
+
+  rpc ListGenres(ListGenresRequest) returns (ListGenresResponse) {
+    option (google.api.http) = {get: "/v1/genres"};
   }
 
   rpc AddMovieGenre(AddMovieGenreRequest) returns (AddMovieGenreResponse) {
@@ -131,7 +146,7 @@ message Movie {
   string description = 3;
   uint64 duration = 4;
   string poster = 5;
-  repeated string genre = 6;
+  repeated string genres = 6;
 }
 
 message Theater {
@@ -213,7 +228,7 @@ message CreateMovieRequest {
   string description = 2 [(google.api.field_behavior) = REQUIRED];
   uint64 duration = 3 [(google.api.field_behavior) = REQUIRED];
   string poster = 4 [(google.api.field_behavior) = REQUIRED];
-  repeated string genre = 8 [(google.api.field_behavior) = OPTIONAL];
+  repeated string genres = 8 [(google.api.field_behavior) = OPTIONAL];
 }
 
 message CreateMovieResponse {
@@ -229,6 +244,27 @@ message UpdateMovieRequest {
 }
 
 message UpdateMovieResponse {}
+
+message DeleteMovieRequest {
+  string id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message DeleteMovieResponse {}
+
+message CreateGenreRequest {
+  string name = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message CreateGenreResponse {}
+
+message ListGenresRequest {
+  uint64 offset = 1 [(google.api.field_behavior) = REQUIRED];
+  uint64 limit = 2 [(google.api.field_behavior) = REQUIRED];
+}
+message ListGenresResponse {
+  repeated string genres = 1 [(google.api.field_behavior) = REQUIRED];
+  uint64 total = 2 [(google.api.field_behavior) = REQUIRED];
+}
 
 message AddMovieGenreRequest {
   string id = 1 [(google.api.field_behavior) = REQUIRED];

@@ -4,6 +4,8 @@ import (
 	"database/sql"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/harveytvt/movie-reservation-system/internal/biz/genre"
+	"github.com/harveytvt/movie-reservation-system/internal/biz/movie"
 	"github.com/harveytvt/movie-reservation-system/internal/biz/user"
 	"github.com/harveytvt/movie-reservation-system/internal/config"
 	"github.com/harveytvt/movie-reservation-system/internal/data/mysql/repository"
@@ -18,6 +20,13 @@ var (
 
 	userRepo *repository.UserRepository
 	userBiz  user.Biz
+
+	movieRepo *repository.MovieRepository
+	movieBiz  movie.Biz
+
+	genreRepo      *repository.GenreRepository
+	movieGenreRepo *repository.MovieGenreRepository
+	genreBiz       genre.Biz
 )
 
 func init() {
@@ -32,4 +41,11 @@ func init() {
 
 	userRepo = repository.NewUserRepository(bunDB)
 	userBiz = user.NewBiz(userRepo)
+
+	movieRepo = repository.NewMovieRepository(bunDB)
+	genreRepo = repository.NewGenreRepository(bunDB)
+	movieGenreRepo = repository.NewMovieGenreRepository(bunDB)
+	movieBiz = movie.NewBiz(movieRepo, genreRepo, movieGenreRepo)
+
+	genreBiz = genre.NewBiz(genreRepo, movieGenreRepo)
 }

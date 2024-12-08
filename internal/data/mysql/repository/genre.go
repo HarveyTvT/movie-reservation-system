@@ -16,7 +16,7 @@ func NewGenreRepository(db *bun.DB) *GenreRepository {
 }
 
 func (r *GenreRepository) Create(ctx context.Context, genre *model.Genre) error {
-	_, err := r.db.NewInsert().Model(genre).Exec(ctx)
+	_, err := r.db.NewInsert().Model(genre).Ignore().Exec(ctx)
 	return err
 }
 

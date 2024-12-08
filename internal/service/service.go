@@ -6,8 +6,11 @@ import (
 
 	"github.com/harveytvt/movie-reservation-system/gen/go/api/movie_reservation/v1"
 	"github.com/harveytvt/movie-reservation-system/internal/auth"
+	"github.com/harveytvt/movie-reservation-system/internal/biz/genre"
+	"github.com/harveytvt/movie-reservation-system/internal/biz/movie"
 	"github.com/harveytvt/movie-reservation-system/internal/biz/user"
 	"github.com/harveytvt/movie-reservation-system/internal/config"
+	"github.com/spf13/cast"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/health/grpc_health_v1"
@@ -19,7 +22,9 @@ type service struct {
 	movie_reservation.UnimplementedMovieReservationServiceServer
 	grpc_health_v1.UnimplementedHealthServer
 
-	user user.Biz
+	user  user.Biz
+	movie movie.Biz
+	genre genre.Biz
 }
 
 type Service interface {
@@ -29,7 +34,9 @@ type Service interface {
 
 func NewService() Service {
 	return &service{
-		user: userBiz,
+		user:  userBiz,
+		movie: movieBiz,
+		genre: genreBiz,
 	}
 }
 
@@ -85,5 +92,101 @@ func (s *service) Whoami(ctx context.Context, req *movie_reservation.WhoamiReque
 
 	return &movie_reservation.WhoamiResponse{
 		User: u,
+	}, nil
+}
+
+func (s *service) CreateMovie(ctx context.Context, req *movie_reservation.CreateMovieRequest) (*movie_reservation.CreateMovieResponse, error) {
+	if err := auth.AssertRole(ctx, movie_reservation.User_ROLE_ADMIN); err != nil {
+		return nil, err
+	}
+
+	movieID, err := s.movie.Create(ctx, req)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &movie_reservation.CreateMovieResponse{
+		Id: cast.ToString(movieID),
+	}, nil
+}
+
+func (s *service) UpdateMovie(ctx context.Context, req *movie_reservation.UpdateMovieRequest) (*movie_reservation.UpdateMovieResponse, error) {
+	if err := auth.AssertRole(ctx, movie_reservation.User_ROLE_ADMIN); err != nil {
+		return nil, err
+	}
+
+	err := s.movie.Update(ctx, req)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &movie_reservation.UpdateMovieResponse{}, nil
+}
+
+func (s *service) DeleteMovie(ctx context.Context, req *movie_reservation.DeleteMovieRequest) (*movie_reservation.DeleteMovieResponse, error) {
+	if err := auth.AssertRole(ctx, movie_reservation.User_ROLE_ADMIN); err != nil {
+		return nil, err
+	}
+
+	err := s.movie.Delete(ctx, req.Id)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &movie_reservation.DeleteMovieResponse{}, nil
+}
+
+func (s *service) ListGenres(ctx context.Context, req *movie_reservation.ListGenresRequest) (*movie_reservation.ListGenresResponse, error) {
+	genres, cnt, err := s.genre.List(ctx, req.Offset, req.Limit)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &movie_reservation.ListGenresResponse{
+		Genres: genres,
+		Total:  cnt,
+	}, nil
+}
+
+func (s *service) CreateGenre(ctx context.Context, req *movie_reservation.CreateGenreRequest) (*movie_reservation.CreateGenreResponse, error) {
+	if err := auth.AssertRole(ctx, movie_reservation.User_ROLE_ADMIN); err != nil {
+		return nil, err
+	}
+
+	err := s.genre.Create(ctx, req.Name)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &movie_reservation.CreateGenreResponse{}, nil
+}
+
+func (s *service) AddMovieGenre(ctx context.Context, req *movie_reservation.AddMovieGenreRequest) (*movie_reservation.AddMovieGenreResponse, error) {
+	if err := auth.AssertRole(ctx, movie_reservation.User_ROLE_ADMIN); err != nil {
+		return nil, err
+	}
+
+	err := s.genre.Add(ctx, req.Id, req.Genre)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &movie_reservation.AddMovieGenreResponse{}, nil
+}
+
+func (s *service) RemoveMovieGenre(ctx context.Context, req *movie_reservation.RemoveMovieGenreRequest) (*movie_reservation.RemoveMovieGenreResponse, error) {
+	if err := auth.AssertRole(ctx, movie_reservation.User_ROLE_ADMIN); err != nil {
+		return nil, err
+	}
+
+	err := s.genre.Remove(ctx, req.Id, req.Genre)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &movie_reservation.RemoveMovieGenreResponse{}, nil
+}
+
+func (s *service) ListMovies(ctx context.Context, req *movie_reservation.ListMoviesRequest) (*movie_reservation.ListMoviesResponse, error) {
+	movies, cnt, err := s.movie.List(ctx, req)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &movie_reservation.ListMoviesResponse{
+		Movies: movies,
+		Total:  cnt,
 	}, nil
 }

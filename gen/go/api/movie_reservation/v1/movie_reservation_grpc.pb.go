@@ -24,7 +24,10 @@ const (
 	MovieReservationService_Whoami_FullMethodName           = "/api.movie_reservation.v1.MovieReservationService/Whoami"
 	MovieReservationService_CreateMovie_FullMethodName      = "/api.movie_reservation.v1.MovieReservationService/CreateMovie"
 	MovieReservationService_UpdateMovie_FullMethodName      = "/api.movie_reservation.v1.MovieReservationService/UpdateMovie"
+	MovieReservationService_DeleteMovie_FullMethodName      = "/api.movie_reservation.v1.MovieReservationService/DeleteMovie"
 	MovieReservationService_ListMovies_FullMethodName       = "/api.movie_reservation.v1.MovieReservationService/ListMovies"
+	MovieReservationService_CreateGenre_FullMethodName      = "/api.movie_reservation.v1.MovieReservationService/CreateGenre"
+	MovieReservationService_ListGenres_FullMethodName       = "/api.movie_reservation.v1.MovieReservationService/ListGenres"
 	MovieReservationService_AddMovieGenre_FullMethodName    = "/api.movie_reservation.v1.MovieReservationService/AddMovieGenre"
 	MovieReservationService_RemoveMovieGenre_FullMethodName = "/api.movie_reservation.v1.MovieReservationService/RemoveMovieGenre"
 	MovieReservationService_ListShows_FullMethodName        = "/api.movie_reservation.v1.MovieReservationService/ListShows"
@@ -49,7 +52,10 @@ type MovieReservationServiceClient interface {
 	Whoami(ctx context.Context, in *WhoamiRequest, opts ...grpc.CallOption) (*WhoamiResponse, error)
 	CreateMovie(ctx context.Context, in *CreateMovieRequest, opts ...grpc.CallOption) (*CreateMovieResponse, error)
 	UpdateMovie(ctx context.Context, in *UpdateMovieRequest, opts ...grpc.CallOption) (*UpdateMovieResponse, error)
+	DeleteMovie(ctx context.Context, in *DeleteMovieRequest, opts ...grpc.CallOption) (*DeleteMovieResponse, error)
 	ListMovies(ctx context.Context, in *ListMoviesRequest, opts ...grpc.CallOption) (*ListMoviesResponse, error)
+	CreateGenre(ctx context.Context, in *CreateGenreRequest, opts ...grpc.CallOption) (*CreateGenreResponse, error)
+	ListGenres(ctx context.Context, in *ListGenresRequest, opts ...grpc.CallOption) (*ListGenresResponse, error)
 	AddMovieGenre(ctx context.Context, in *AddMovieGenreRequest, opts ...grpc.CallOption) (*AddMovieGenreResponse, error)
 	RemoveMovieGenre(ctx context.Context, in *RemoveMovieGenreRequest, opts ...grpc.CallOption) (*RemoveMovieGenreResponse, error)
 	ListShows(ctx context.Context, in *ListShowsRequest, opts ...grpc.CallOption) (*ListShowsResponse, error)
@@ -118,9 +124,36 @@ func (c *movieReservationServiceClient) UpdateMovie(ctx context.Context, in *Upd
 	return out, nil
 }
 
+func (c *movieReservationServiceClient) DeleteMovie(ctx context.Context, in *DeleteMovieRequest, opts ...grpc.CallOption) (*DeleteMovieResponse, error) {
+	out := new(DeleteMovieResponse)
+	err := c.cc.Invoke(ctx, MovieReservationService_DeleteMovie_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *movieReservationServiceClient) ListMovies(ctx context.Context, in *ListMoviesRequest, opts ...grpc.CallOption) (*ListMoviesResponse, error) {
 	out := new(ListMoviesResponse)
 	err := c.cc.Invoke(ctx, MovieReservationService_ListMovies_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *movieReservationServiceClient) CreateGenre(ctx context.Context, in *CreateGenreRequest, opts ...grpc.CallOption) (*CreateGenreResponse, error) {
+	out := new(CreateGenreResponse)
+	err := c.cc.Invoke(ctx, MovieReservationService_CreateGenre_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *movieReservationServiceClient) ListGenres(ctx context.Context, in *ListGenresRequest, opts ...grpc.CallOption) (*ListGenresResponse, error) {
+	out := new(ListGenresResponse)
+	err := c.cc.Invoke(ctx, MovieReservationService_ListGenres_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -253,7 +286,10 @@ type MovieReservationServiceServer interface {
 	Whoami(context.Context, *WhoamiRequest) (*WhoamiResponse, error)
 	CreateMovie(context.Context, *CreateMovieRequest) (*CreateMovieResponse, error)
 	UpdateMovie(context.Context, *UpdateMovieRequest) (*UpdateMovieResponse, error)
+	DeleteMovie(context.Context, *DeleteMovieRequest) (*DeleteMovieResponse, error)
 	ListMovies(context.Context, *ListMoviesRequest) (*ListMoviesResponse, error)
+	CreateGenre(context.Context, *CreateGenreRequest) (*CreateGenreResponse, error)
+	ListGenres(context.Context, *ListGenresRequest) (*ListGenresResponse, error)
 	AddMovieGenre(context.Context, *AddMovieGenreRequest) (*AddMovieGenreResponse, error)
 	RemoveMovieGenre(context.Context, *RemoveMovieGenreRequest) (*RemoveMovieGenreResponse, error)
 	ListShows(context.Context, *ListShowsRequest) (*ListShowsResponse, error)
@@ -289,8 +325,17 @@ func (UnimplementedMovieReservationServiceServer) CreateMovie(context.Context, *
 func (UnimplementedMovieReservationServiceServer) UpdateMovie(context.Context, *UpdateMovieRequest) (*UpdateMovieResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateMovie not implemented")
 }
+func (UnimplementedMovieReservationServiceServer) DeleteMovie(context.Context, *DeleteMovieRequest) (*DeleteMovieResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteMovie not implemented")
+}
 func (UnimplementedMovieReservationServiceServer) ListMovies(context.Context, *ListMoviesRequest) (*ListMoviesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMovies not implemented")
+}
+func (UnimplementedMovieReservationServiceServer) CreateGenre(context.Context, *CreateGenreRequest) (*CreateGenreResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateGenre not implemented")
+}
+func (UnimplementedMovieReservationServiceServer) ListGenres(context.Context, *ListGenresRequest) (*ListGenresResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListGenres not implemented")
 }
 func (UnimplementedMovieReservationServiceServer) AddMovieGenre(context.Context, *AddMovieGenreRequest) (*AddMovieGenreResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddMovieGenre not implemented")
@@ -435,6 +480,24 @@ func _MovieReservationService_UpdateMovie_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MovieReservationService_DeleteMovie_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteMovieRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieReservationServiceServer).DeleteMovie(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MovieReservationService_DeleteMovie_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieReservationServiceServer).DeleteMovie(ctx, req.(*DeleteMovieRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _MovieReservationService_ListMovies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListMoviesRequest)
 	if err := dec(in); err != nil {
@@ -449,6 +512,42 @@ func _MovieReservationService_ListMovies_Handler(srv interface{}, ctx context.Co
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MovieReservationServiceServer).ListMovies(ctx, req.(*ListMoviesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MovieReservationService_CreateGenre_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateGenreRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieReservationServiceServer).CreateGenre(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MovieReservationService_CreateGenre_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieReservationServiceServer).CreateGenre(ctx, req.(*CreateGenreRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MovieReservationService_ListGenres_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListGenresRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieReservationServiceServer).ListGenres(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MovieReservationService_ListGenres_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieReservationServiceServer).ListGenres(ctx, req.(*ListGenresRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -715,8 +814,20 @@ var MovieReservationService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _MovieReservationService_UpdateMovie_Handler,
 		},
 		{
+			MethodName: "DeleteMovie",
+			Handler:    _MovieReservationService_DeleteMovie_Handler,
+		},
+		{
 			MethodName: "ListMovies",
 			Handler:    _MovieReservationService_ListMovies_Handler,
+		},
+		{
+			MethodName: "CreateGenre",
+			Handler:    _MovieReservationService_CreateGenre_Handler,
+		},
+		{
+			MethodName: "ListGenres",
+			Handler:    _MovieReservationService_ListGenres_Handler,
 		},
 		{
 			MethodName: "AddMovieGenre",

@@ -6,7 +6,10 @@ import (
 	"strings"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/harveytvt/movie-reservation-system/gen/go/api/movie_reservation/v1"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -86,4 +89,25 @@ func UsernameFromContext(ctx context.Context) string {
 	}
 
 	return ""
+}
+
+func RoleFromContext(ctx context.Context) movie_reservation.User_Role {
+	var roleStr string
+	if v := metadata.ValueFromIncomingContext(ctx, "role"); len(v) > 0 {
+		roleStr = v[0]
+	}
+
+	if v, ok := ctx.Value("role").(string); ok {
+		roleStr = v
+	}
+
+	return movie_reservation.User_Role(movie_reservation.User_Role_value[roleStr])
+}
+
+func AssertRole(ctx context.Context, role movie_reservation.User_Role) error {
+	if RoleFromContext(ctx) < role {
+		return status.Error(codes.PermissionDenied, "permission denied")
+	}
+
+	return nil
 }

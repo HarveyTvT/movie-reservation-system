@@ -12,23 +12,31 @@ import (
 )
 
 type Biz interface {
-	Create(ctx context.Context, request *movie_reservation.CreateMovieRequest) error
+	Create(ctx context.Context, request *movie_reservation.CreateMovieRequest) (uint64, error)
 	Update(ctx context.Context, request *movie_reservation.UpdateMovieRequest) error
-	Delete(ctx context.Context, movieID uint64) error
+	Delete(ctx context.Context, movieID string) error
 	List(ctx context.Context, request *movie_reservation.ListMoviesRequest) ([]*movie_reservation.Movie, uint64, error)
 }
 
 type biz struct {
-	movieRepo *repository.MovieRepository
+	movieRepo      *repository.MovieRepository
+	genreRepo      *repository.GenreRepository
+	movieGenreRepo *repository.MovieGenreRepository
 }
 
-func NewBiz(movieRepo *repository.MovieRepository) Biz {
+func NewBiz(
+	movieRepo *repository.MovieRepository,
+	genreRepo *repository.GenreRepository,
+	movieGenre *repository.MovieGenreRepository,
+) Biz {
 	return &biz{
-		movieRepo: movieRepo,
+		movieRepo:      movieRepo,
+		genreRepo:      genreRepo,
+		movieGenreRepo: movieGenre,
 	}
 }
 
-func (b *biz) Create(ctx context.Context, request *movie_reservation.CreateMovieRequest) error {
+func (b *biz) Create(ctx context.Context, request *movie_reservation.CreateMovieRequest) (uint64, error) {
 	record := &model.Movie{
 		Name:        request.Title,
 		Description: request.Description,
@@ -38,10 +46,18 @@ func (b *biz) Create(ctx context.Context, request *movie_reservation.CreateMovie
 
 	err := b.movieRepo.Create(ctx, record)
 	if err != nil {
-		return status.Error(codes.Internal, err.Error())
+		return 0, status.Error(codes.Internal, err.Error())
 	}
 
-	return nil
+	for _, genre := range request.Genres {
+		b.genreRepo.Create(ctx, &model.Genre{Name: genre})
+		b.movieGenreRepo.Create(ctx, &model.MovieGenre{
+			MovieID: record.ID,
+			Genre:   genre,
+		})
+	}
+
+	return record.ID, nil
 }
 
 func (b *biz) Update(ctx context.Context, request *movie_reservation.UpdateMovieRequest) error {
@@ -79,8 +95,8 @@ func (b *biz) Update(ctx context.Context, request *movie_reservation.UpdateMovie
 	return nil
 }
 
-func (b *biz) Delete(ctx context.Context, movieID uint64) error {
-	err := b.movieRepo.Delete(ctx, movieID)
+func (b *biz) Delete(ctx context.Context, movieID string) error {
+	err := b.movieRepo.Delete(ctx, cast.ToUint64(movieID))
 	if err != nil {
 		return status.Error(codes.Internal, err.Error())
 	}
@@ -92,14 +108,29 @@ func (b *biz) List(ctx context.Context, request *movie_reservation.ListMoviesReq
 	offset := cast.ToUint64(request.Offset)
 	limit := cast.ToUint64(request.Limit)
 
-	records, count, err := b.movieRepo.List(ctx, offset, limit)
+	records, count, err := b.movieRepo.List(ctx, request.GetGenre(), offset, limit)
+	if err != nil {
+		return nil, 0, status.Error(codes.Internal, err.Error())
+	}
+
+	movieIDs := make([]uint64, 0, len(records))
+	for _, record := range records {
+		movieIDs = append(movieIDs, record.ID)
+	}
+
+	movieGenres, err := b.movieGenreRepo.MGetMovieGenres(ctx, movieIDs)
 	if err != nil {
 		return nil, 0, status.Error(codes.Internal, err.Error())
 	}
 
 	movies := make([]*movie_reservation.Movie, 0, len(records))
 	for _, record := range records {
-		movies = append(movies, record.ToPB())
+		result := record.ToPB()
+		if genres, ok := movieGenres[record.ID]; ok {
+			result.Genres = genres
+		}
+		movies = append(movies, result)
+
 	}
 
 	return movies, count, nil

@@ -16,8 +16,16 @@ func NewMovieRepository(db *bun.DB) *MovieRepository {
 }
 
 func (r *MovieRepository) Create(ctx context.Context, movie *model.Movie) error {
-	_, err := r.db.NewInsert().Model(movie).Exec(ctx)
-	return err
+	result, err := r.db.NewInsert().Model(movie).Exec(ctx)
+	if err != nil {
+		return err
+	}
+	resultID, err := result.LastInsertId()
+	if err != nil {
+		return err
+	}
+	movie.ID = uint64(resultID)
+	return nil
 }
 
 func (r *MovieRepository) Get(ctx context.Context, id uint64) (*model.Movie, error) {
@@ -29,9 +37,15 @@ func (r *MovieRepository) Get(ctx context.Context, id uint64) (*model.Movie, err
 	return movie, nil
 }
 
-func (r *MovieRepository) List(ctx context.Context, offset uint64, limit uint64) ([]*model.Movie, uint64, error) {
+func (r *MovieRepository) List(ctx context.Context, genre string, offset uint64, limit uint64) ([]*model.Movie, uint64, error) {
 	results := make([]*model.Movie, 0)
-	cnt, err := r.db.NewSelect().Model(&model.Movie{}).Offset(int(offset)).Limit(int(limit)).ScanAndCount(ctx, &results)
+	s := r.db.NewSelect().Model(&model.Movie{}).Offset(int(offset)).Limit(int(limit))
+
+	if genre != "" {
+		s.Join("INNER JOIN movie_genres ON movie_genres.movie_id = movies.id").Where("movie_genres.genre = ?", genre)
+	}
+
+	cnt, err := s.ScanAndCount(ctx, &results)
 	if err != nil {
 		return nil, 0, err
 	}

@@ -16,6 +16,74 @@
     "application/json"
   ],
   "paths": {
+    "/v1/genres": {
+      "get": {
+        "operationId": "MovieReservationService_ListGenres",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListGenresResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "MovieReservationService"
+        ]
+      },
+      "post": {
+        "operationId": "MovieReservationService_CreateGenre",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateGenreResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateGenreRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MovieReservationService"
+        ]
+      }
+    },
     "/v1/halls": {
       "post": {
         "operationId": "MovieReservationService_CreateHall",
@@ -256,6 +324,34 @@
       }
     },
     "/v1/movies/{id}": {
+      "delete": {
+        "operationId": "MovieReservationService_DeleteMovie",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeleteMovieResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MovieReservationService"
+        ]
+      },
       "put": {
         "operationId": "MovieReservationService_UpdateMovie",
         "responses": {
@@ -717,6 +813,20 @@
     "v1AddMovieGenreResponse": {
       "type": "object"
     },
+    "v1CreateGenreRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "v1CreateGenreResponse": {
+      "type": "object"
+    },
     "v1CreateHallRequest": {
       "type": "object",
       "properties": {
@@ -751,7 +861,7 @@
         "poster": {
           "type": "string"
         },
-        "genre": {
+        "genres": {
           "type": "array",
           "items": {
             "type": "string"
@@ -829,6 +939,9 @@
     "v1DeleteHallResponse": {
       "type": "object"
     },
+    "v1DeleteMovieResponse": {
+      "type": "object"
+    },
     "v1DeleteSeatResponse": {
       "type": "object"
     },
@@ -883,6 +996,25 @@
           "format": "int64"
         }
       }
+    },
+    "v1ListGenresResponse": {
+      "type": "object",
+      "properties": {
+        "genres": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "total": {
+          "type": "string",
+          "format": "uint64"
+        }
+      },
+      "required": [
+        "genres",
+        "total"
+      ]
     },
     "v1ListMoviesResponse": {
       "type": "object",
@@ -962,7 +1094,7 @@
         "poster": {
           "type": "string"
         },
-        "genre": {
+        "genres": {
           "type": "array",
           "items": {
             "type": "string"
